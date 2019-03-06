@@ -29,7 +29,7 @@ Function Invoke-PipelineThreading
 
     .EXAMPLE
     Get-ADComputer |
-        Select-Object -ExpandProperty CN |
+        Select-Object -ExpandProperty Name |
         Invoke-PipelineThreading -Threads 30 -ShowProgress -Script {
             $temp = [ordered]@{}
             $temp.ComputerName = $_
