@@ -28,8 +28,8 @@ Function Invoke-PipelineThreading
     configuration or credentials, or to write alternate output streams.
 
     .EXAMPLE
-    Get-ADComputer |
-        Select-Object -ExpandProperty CN |
+    Get-ADComputer -Filter * |
+        Select-Object -ExpandProperty DNSHostName |
         Invoke-PipelineThreading -Threads 30 -ShowProgress -Script {
             $temp = [ordered]@{}
             $temp.ComputerName = $_
