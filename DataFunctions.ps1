@@ -4,7 +4,8 @@ Function Invoke-PipelineThreading
     .SYNOPSIS
     Behaves similar to ForEach-Object, except it creates threads and executes
     the script in parallel. Execution is done with runspaces so variables are
-    not shared by default.
+    not shared by default. It's written such that you can simply replace
+    "ForEach-Object" with "Invoke-PipelineThreading".
 
     .PARAMETER Script
     The script to execute for each object. By default one object is passed to
@@ -29,7 +30,7 @@ Function Invoke-PipelineThreading
     .EXAMPLE
     Get-ADComputer |
         Select-Object -ExpandProperty CN |
-        Invoke-PipelineThreading -Threads 30 -Script {
+        Invoke-PipelineThreading -Threads 30 -ShowProgress -Script {
             $temp = [ordered]@{}
             $temp.ComputerName = $_
             $temp.IsOnline = Test-Connection -ComputerName $_ -Count 1 -Quiet
@@ -40,11 +41,12 @@ Function Invoke-PipelineThreading
     Param
     (
         [Parameter(ValueFromPipeline=$true)] [object[]] $InputObject,
-        [Parameter(Position=0,Mandatory=$true)] [scriptblock] $Script,
+        [Parameter(Position=0,Mandatory=$true)] [Alias('Process')] [scriptblock] $Script,
         [Parameter()] [int] $Threads = 10,
         [Parameter()] [int] $ChunkSize = 1,
         [Parameter()] [scriptblock] $StartupScript,
-        [Parameter()] [string[]] $ImportVariables
+        [Parameter()] [string[]] $ImportVariables,
+        [Parameter()] [switch] $ShowProgress
     )
     Begin
     {
@@ -56,6 +58,7 @@ Function Invoke-PipelineThreading
     }
     End
     {
+        $hashCode = $PSCmdlet.GetHashCode()
         $inputCount = $inputObjectList.Count
         if (!$inputCount) { return }
         $finalThreadCount = [Math]::Min([Math]::Ceiling($inputCount / $ChunkSize), $Threads)
@@ -114,6 +117,20 @@ Function Invoke-PipelineThreading
                 }
                 $thread.Invocation = $thread.PowerShell.BeginInvoke()
             }
+
+            if ($ShowProgress)
+            {
+                $progressRecord = New-Object System.Management.Automation.ProgressRecord $hashCode, "Threading", "Processing"
+                $progressRecord.PercentComplete = 100 * $completedCount / $inputCount
+                $PSCmdlet.WriteProgress($progressRecord)
+            }
         }
+
+            if ($ShowProgress)
+            {
+                $progressRecord = New-Object System.Management.Automation.ProgressRecord $hashCode, "Threading", "Completed"
+                $progressRecord.RecordType = 'Completed'
+                $PSCmdlet.WriteProgress($progressRecord)
+            }
     }
 }
