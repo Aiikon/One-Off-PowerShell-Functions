@@ -80,3 +80,86 @@ Measure-Command {
         else { 'nothing' }
     }
 }
+
+
+# ========================================================================
+# Property Access
+# ========================================================================
+
+Write-Host -ForegroundColor Cyan "Accessing Object via Property"
+Measure-Command {
+    $object = [pscustomobject]$PSVersionTable
+    for ($i = 0; $i -lt 1000000; $i++)
+    {
+        $PSVersionTable.PSVersion
+    }
+}
+
+
+Write-Host -ForegroundColor Cyan "Accessing Object via String"
+Measure-Command {
+    $object = [pscustomobject]$PSVersionTable
+    for ($i = 0; $i -lt 1000000; $i++)
+    {
+        $PSVersionTable."PSVersion"
+    }
+}
+
+Write-Host -ForegroundColor Cyan "Accessing Object via Variable"
+Measure-Command {
+    $object = [pscustomobject]$PSVersionTable
+    $propertyName = 'PSVersion'
+    for ($i = 0; $i -lt 1000000; $i++)
+    {
+        $PSVersionTable.$propertyName
+    }
+}
+
+
+Write-Host -ForegroundColor Cyan "Accessing Dictionary via Property"
+Measure-Command {
+    $object = $PSVersionTable
+    for ($i = 0; $i -lt 1000000; $i++)
+    {
+        $PSVersionTable.PSVersion
+    }
+}
+
+
+Write-Host -ForegroundColor Cyan "Accessing Dictionary via String"
+Measure-Command {
+    $object = $PSVersionTable
+    for ($i = 0; $i -lt 1000000; $i++)
+    {
+        $PSVersionTable."PSVersion"
+    }
+}
+
+Write-Host -ForegroundColor Cyan "Accessing Dictionary via Variable"
+Measure-Command {
+    $object = $PSVersionTable
+    $propertyName = 'PSVersion'
+    for ($i = 0; $i -lt 1000000; $i++)
+    {
+        $PSVersionTable.$propertyName
+    }
+}
+
+Write-Host -ForegroundColor Cyan "Accessing Dictionary via Key String"
+Measure-Command {
+    $object = $PSVersionTable
+    for ($i = 0; $i -lt 1000000; $i++)
+    {
+        $PSVersionTable['PSVersion']
+    }
+}
+
+Write-Host -ForegroundColor Cyan "Accessing Dictionary via Key Variable"
+Measure-Command {
+    $object = $PSVersionTable
+    $propertyName = 'PSVersion'
+    for ($i = 0; $i -lt 1000000; $i++)
+    {
+        $PSVersionTable[$propertyName]
+    }
+}
