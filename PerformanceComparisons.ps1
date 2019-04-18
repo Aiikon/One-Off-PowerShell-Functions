@@ -163,3 +163,34 @@ Measure-Command {
         $PSVersionTable[$propertyName]
     }
 }
+
+# ========================================================================
+# Creating DateTime values relative to the current date
+# ========================================================================
+
+Write-Host -ForegroundColor Cyan "From New-Object"
+Measure-Command {
+    for ($i = 0; $i -lt 100000; $i++)
+    {
+        $date = [DateTime]::Now
+        New-Object DateTime $date.Year, $date.Month, $date.Day, $date.Hour, $date.Minute, $date.Second
+    }
+}
+
+Write-Host -ForegroundColor Cyan "From [DateTime]::New()"
+Measure-Command {
+    for ($i = 0; $i -lt 100000; $i++)
+    {
+        $date = [DateTime]::Now
+        [DateTime]::new($date.Year, $date.Month, $date.Day, $date.Hour, $date.Minute, $date.Second)
+    }
+}
+
+Write-Host -ForegroundColor Cyan "From Date.AddHours.AddMinutes.AddSeconds"
+Measure-Command {
+    for ($i = 0; $i -lt 100000; $i++)
+    {
+        $date = [DateTime]::Now
+        $date.Date.AddHours($date.Hour).AddMinutes($date.Minute).AddSeconds($date.Second)
+    }
+}
