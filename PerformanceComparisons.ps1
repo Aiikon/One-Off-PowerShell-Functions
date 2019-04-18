@@ -194,3 +194,54 @@ Measure-Command {
         $date.Date.AddHours($date.Hour).AddMinutes($date.Minute).AddSeconds($date.Second)
     }
 }
+
+
+# ========================================================================
+# Typecasting
+# ========================================================================
+
+Write-Host -ForegroundColor Cyan "Baseline int"
+Measure-Command {
+    for ($i = 0; $i -lt 100000; $i++)
+    {
+        $value = [int]1000
+        $newValue = $value
+    }
+}
+
+Write-Host -ForegroundColor Cyan "Casting int as int"
+Measure-Command {
+    for ($i = 0; $i -lt 100000; $i++)
+    {
+        $value = [int]1000
+        $newValue = [int]$value
+    }
+}
+
+
+Write-Host -ForegroundColor Cyan "Casting int as int64"
+Measure-Command {
+    for ($i = 0; $i -lt 100000; $i++)
+    {
+        $value = [int]1000
+        $newValue = [int64]$value
+    }
+}
+
+Write-Host -ForegroundColor Cyan "Casting int as double"
+Measure-Command {
+    for ($i = 0; $i -lt 100000; $i++)
+    {
+        $value = [int]1000
+        $newValue = [double]$value
+    }
+}
+
+Write-Host -ForegroundColor Cyan "Casting int as string"
+Measure-Command {
+    for ($i = 0; $i -lt 100000; $i++)
+    {
+        $value = [int]1000
+        $newValue = [double]$value
+    }
+}
