@@ -15,6 +15,19 @@ Measure-Command {
     }
 }
 
+Write-Host -ForegroundColor Cyan "Three Item Switch w/ Break"
+Measure-Command {
+    for ($i = 0; $i -lt 1000000; $i++)
+    {
+        switch ($i)
+        {
+            1 { 'nothing'; break }
+            10000 { 'nothing'; break }
+            default { 'nothing'; break }
+        }
+    }
+}
+
 Write-Host -ForegroundColor Cyan "Three Item If ElseIf Else"
 Measure-Command {
     for ($i = 0; $i -lt 1000000; $i++)
@@ -41,6 +54,26 @@ Measure-Command {
             80000 { 'nothing' }
             100000 { 'nothing' }
             default { 'nothing' }
+        }
+    }
+}
+
+Write-Host -ForegroundColor Cyan "Ten Item Switch w/ Break"
+Measure-Command {
+    for ($i = 0; $i -lt 1000000; $i++)
+    {
+        switch ($i)
+        {
+            1 { 'nothing'; break }
+            1000 { 'nothing'; break }
+            2000 { 'nothing'; break }
+            4000 { 'nothing'; break }
+            8000 { 'nothing'; break }
+            20000 { 'nothing'; break }
+            40000 { 'nothing'; break }
+            80000 { 'nothing'; break }
+            100000 { 'nothing'; break }
+            default { 'nothing'; break }
         }
     }
 }
