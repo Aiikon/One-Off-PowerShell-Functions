@@ -278,3 +278,39 @@ Measure-Command {
         $newValue = [double]$value
     }
 }
+
+# ========================================================================
+# Null Redirection
+# ========================================================================
+
+Write-Host -ForegroundColor Cyan "Out-Null"
+Measure-Command {
+    for ($i = 0; $i -lt 100000; $i++)
+    {
+        1 | Out-Null
+    }
+} | % TotalMilliseconds
+
+Write-Host -ForegroundColor Cyan "> `$null"
+Measure-Command {
+    for ($i = 0; $i -lt 100000; $i++)
+    {
+        1 > $null
+    }
+} | % TotalMilliseconds
+
+Write-Host -ForegroundColor Cyan "[void]"
+Measure-Command {
+    for ($i = 0; $i -lt 100000; $i++)
+    {
+        [void](1)
+    }
+} | % TotalMilliseconds
+
+Write-Host -ForegroundColor Cyan "`$null ="
+Measure-Command {
+    for ($i = 0; $i -lt 100000; $i++)
+    {
+        $null = 1
+    }
+} | % TotalMilliseconds
